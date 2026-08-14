@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ky">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кыз узатуу - Адинай</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Выбор языка -->
+    <div id="languageScreen" class="language-screen active">
+        <h1 class="language-title">ТИЛДИ ТАНДАНЫЗ</h1>
+        <p class="language-subtitle">ВЫБЕРИТЕ ЯЗЫК</p>
+        
+        <button class="lang-btn" onclick="setLanguage('ky')">КЫРГЫЗЧА</button>
+        <button class="lang-btn" onclick="setLanguage('ru')">РУССКИЙ</button>
+    </div>
+
+    <!-- Основной контент -->
+    <div id="mainContent" class="hidden">
+        <div class="sections-container">
+            <!-- Конверт -->
+        <section id="envelope" class="envelope-section active">
+            <div class="envelope-container">
+                <h2 class="envelope-text-top" id="invitedTo">ВЫ ПРИГЛАШЕНЫ НА</h2>
+                <h3 class="envelope-text-middle" id="eventName">Кыз узатуу</h3>
+                <div class="envelope-icon">
+                    <svg class="envelope-seal" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1"/>
+                        <text x="50" y="60" text-anchor="middle" font-size="40" font-family="serif">A</text>
+                    </svg>
+                </div>
+                <p class="envelope-hint" id="clickHint">(нажмите)</p>
+                <p class="envelope-text-bottom" id="invitationHint">В ВЕЧЕР, НАПОЛНЕННЫЙ СЧАСТЬЕМ — БУДЬТЕ РЯДОМ С НАМИ!</p>
+            </div>
+        </section>
+
+        <!-- Главный экран с монограммой -->
+        <section id="monogram" class="monogram-section">
+            <div class="monogram-container">
+                <div class="monogram-frame">
+                    <svg class="monogram-border" viewBox="0 0 200 200">
+                        <path d="M100,20 Q150,20 180,50 Q200,70 200,100 Q200,130 180,150 Q150,180 100,180 Q50,180 20,150 Q0,130 0,100 Q0,70 20,50 Q50,20 100,20" 
+                              fill="none" stroke="currentColor" stroke-width="2"/>
+                        <!-- Декоративные элементы -->
+                        <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+                    </svg>
+                    <h1 class="monogram-letter">A</h1>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <svg class="chevron-down" viewBox="0 0 24 24">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Карточка приглашения -->
+        <section id="invitation-card" class="invitation-card-section">
+            <div class="invitation-card">
+                <div class="card-flower">
+                    <svg class="flower-icon" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="8" fill="#c77da3"/>
+                        <circle cx="50" cy="30" r="6" fill="#e89bb5"/>
+                        <circle cx="65" cy="40" r="6" fill="#e89bb5"/>
+                        <circle cx="65" cy="60" r="6" fill="#e89bb5"/>
+                        <circle cx="50" cy="70" r="6" fill="#e89bb5"/>
+                        <circle cx="35" cy="60" r="6" fill="#e89bb5"/>
+                        <circle cx="35" cy="40" r="6" fill="#e89bb5"/>
+                    </svg>
+                </div>
+                <h2 class="card-title" id="brideNameCard">Адинай</h2>
+                <p class="card-subtitle" id="eventTypeCard">КЫЗ УЗАТУУ</p>
+                <p class="card-text" id="cardTextLine">РАЗДЕЛИТЕ С НАМИ ДЕНЬ, НАПОЛНЕННЫЙ СЧАСТЬЕМ!</p>
+                <div class="card-date">
+                    <div class="date-item">
+                        <span class="date-number" id="dateDay">13</span>
+                        <span class="date-dot">•</span>
+                    </div>
+                    <div class="date-item">
+                        <span class="date-number" id="dateMonth">09</span>
+                        <span class="date-dot">•</span>
+                    </div>
+                    <div class="date-item">
+                        <span class="date-number" id="dateYear">26</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Текст приглашения -->
+        <section id="invitation-text" class="invitation-text-section">
+            <h3 class="invitation-greeting" id="greetingText">Уважаемые гости!</h3>
+            <p class="invitation-body" id="bodyText">7 ИЮЛЯ ЭТОГО ГОДА — ОСОБЕННЫЙ ДЕНЬ ДЛЯ НАС. МЫ ХОТИМ ПРОВЕСТИ ЕГО В ОКРУЖЕНИИ САМЫХ БЛИЗКИХ ЛЮДЕЙ. С ВЕЛИКОЙ РАДОСТЬЮ И ГОРДОСТЬЮ ПРИГЛАШАЕМ ВАС НА ПРАЗДНИК, НАПОЛНЕННЫЙ СЧАСТЬЕМ — НА ПРОВОДЫ НАШЕЙ ДОЧЕРИ!</p>
+            <h4 class="month-name" id="monthName">Июль</h4>
+            <div class="calendar">
+                <div class="calendar-weekdays">
+                    <span id="day1">Дн</span>
+                    <span id="day2">Сч</span>
+                    <span id="day3">Сн</span>
+                    <span id="day4">Бш</span>
+                    <span id="day5">Жм</span>
+                    <span id="day6">Ишь</span>
+                    <span id="day7">Жк</span>
+                </div>
+                <div class="calendar-numbers">
+                    <span class="calendar-date">06</span>
+                    <span class="calendar-date highlight">07</span>
+                    <span class="calendar-date">08</span>
+                    <span class="calendar-date">09</span>
+                    <span class="calendar-date">10</span>
+                    <span class="calendar-date">11</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Место и время -->
+        <section id="location-time" class="location-time-section">
+            <div class="time-box">
+                <span class="time" id="eventTime">16:00</span>
+            </div>
+            <p class="location-address" id="locationAddress">ул. Малдыбаева, 54/1</p>
+            <h3 class="restaurant-name" id="restaurantName">«АЛА-ТОО»</h3>
+            <p class="restaurant-type" id="restaurantType">РЕСТОРАН</p>
+            
+            <div class="social-icons">
+                <a href="#" class="social-icon instagram" title="Instagram">
+                    <svg viewBox="0 0 24 24">
+                        <rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+                        <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+                    </svg>
+                </a>
+                <button class="social-icon map-icon" onclick="openMap()" title="2ГИС">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L20 6V18L12 22L4 18V6L12 2Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="12" cy="12" r="2" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+
+            <h4 class="countdown-title" id="countdownLabel">До торжества:</h4>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <div class="countdown-number" id="days">00</div>
+                    <div class="countdown-label" id="daysLabel">Күн</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="hours">00</div>
+                    <div class="countdown-label" id="hoursLabel">Саат</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="minutes">00</div>
+                    <div class="countdown-label" id="minutesLabel">Минут</div>
+                </div>
+                <div class="countdown-item">
+                    <div class="countdown-number" id="seconds">00</div>
+                    <div class="countdown-label" id="secondsLabel">Секунд</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Форма RSVP -->
+        <section id="rsvp-form" class="rsvp-section">
+            <h3 class="rsvp-title" id="rsvpTitle">Анкета гостя :</h3>
+            
+            <form class="guest-form">
+                <div class="form-group">
+                    <label for="guestName" id="nameLabel">Ваше имя:</label>
+                    <input type="text" id="guestName" class="form-input" placeholder="ИМЯ" required>
+                </div>
+
+                <div class="form-group">
+                    <label id="attendanceLabel">Вы можете принти на торжество?</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input">
+                            <span id="option1">Конечно, приду</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input">
+                            <span id="option2">Буду со своей супругой</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input">
+                            <span id="option3">К сожалению, не смогу приступствовать</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label id="countLabel">Количество людей:</label>
+                    <div class="counter">
+                        <button type="button" class="counter-btn" onclick="decreaseCount()">−</button>
+                        <input type="number" class="counter-input" id="guestCount" value="1" min="1">
+                        <button type="button" class="counter-btn" onclick="increaseCount()">+</button>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">отправить</button>
+            </form>
+        </section>
+
+        <!-- Финальный конверт -->
+        <section id="final-envelope" class="final-envelope-section">
+            <div class="final-envelope">
+                <div class="envelope-back"></div>
+                <div class="envelope-front">
+                    <div class="envelope-content">
+                        <p class="envelope-greeting" id="finalGreeting">С УВАЖЕНИЕМ,</p>
+                        <p class="envelope-name bride-name" id="brideName">Адинай</p>
+                        <p class="envelope-name groom-name" id="groomName">Болотбек</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        </div>
+
+        <!-- Языковой переключатель (float) -->
+        <div class="language-switcher">
+            <button class="lang-switch-btn active" onclick="setLanguage('ky')" id="kySwitch">КЫ</button>
+            <button class="lang-switch-btn" onclick="setLanguage('ru')" id="ruSwitch">РУ</button>
+        </div>
+
+        <!-- Музыкальный плеер -->
+        <div class="music-player">
+            <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
+                <svg class="music-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5h-2v-2h2l5-5v12z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="assets/music/background.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

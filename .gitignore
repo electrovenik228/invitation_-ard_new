@@ -1,0 +1,38 @@
+# Git ignore для проекта Кыз узатуу
+
+# Операционные системы
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Node и npm
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-error.log*
+
+# Локальные файлы конфигурации
+.env
+.env.local
+
+# Логи
+*.log
+
+# Распределенные файлы
+dist/
+build/
+temp/
+cache/
+
+# Медиа (временно, если будут большие файлы)
+*.mp4
+*.mov
+*.avi
