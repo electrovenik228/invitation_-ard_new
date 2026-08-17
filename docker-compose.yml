@@ -1,6 +1,9 @@
+name: invitation
+
 services:
   web:
     build: .
+    image: invitation-kyz-uzatuu:latest
     container_name: invitation-kyz-uzatuu
     ports:
       - "6767:8000"
