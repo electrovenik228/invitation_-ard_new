@@ -296,7 +296,7 @@ if (form) {
 
         const t = translations[currentLanguage];
         const guestName = document.getElementById('guestName').value.trim();
-        const guestCount = parseInt(document.getElementById('guestCount').value, 10);
+        const guestCount = Math.max(1, parseInt(document.getElementById('guestCount').value, 10) || 1);
         const attendanceInput = form.querySelector('input[name="attendance"]:checked');
         const submitBtn = document.getElementById('submitBtn');
 
