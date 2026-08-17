@@ -9,6 +9,10 @@ services:
       - "6767:8000"
     env_file:
       - .env
+    environment:
+      RSVP_DATA_DIR: /app/data
+    volumes:
+      - ./data:/app/data
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/')"]

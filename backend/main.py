@@ -1,6 +1,8 @@
 import html
+import json
 import logging
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 import httpx
@@ -16,6 +18,8 @@ load_dotenv(ROOT / ".env")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY")
+DATA_DIR = Path(os.getenv("RSVP_DATA_DIR", ROOT / "data"))
+RSVP_FILE = DATA_DIR / "rsvp.jsonl"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,6 +40,18 @@ class RSVPSubmission(BaseModel):
     guest_count: int = Field(ge=1, le=50)
 
 
+def save_rsvp(data: RSVPSubmission) -> None:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    record = {
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "name": data.name,
+        "attendance": data.attendance,
+        "guest_count": data.guest_count,
+    }
+    with RSVP_FILE.open("a", encoding="utf-8") as file:
+        file.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
 def format_message(data: RSVPSubmission) -> str:
     return (
         "<b>🎉 Жаңы конок / Новая анкета</b>\n\n"
@@ -45,11 +61,11 @@ def format_message(data: RSVPSubmission) -> str:
     )
 
 
-async def send_telegram_message(message: str) -> None:
+async def send_telegram_message(message: str) -> bool:
     proxy = TELEGRAM_PROXY or None
 
     try:
-        async with httpx.AsyncClient(timeout=15.0, proxy=proxy) as client:
+        async with httpx.AsyncClient(timeout=10.0, proxy=proxy) as client:
             response = await client.post(
                 f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
                 json={
@@ -58,24 +74,35 @@ async def send_telegram_message(message: str) -> None:
                     "parse_mode": "HTML",
                 },
             )
-    except httpx.RequestError as exc:
-        logger.error("Telegram request failed: %s", exc)
-        raise HTTPException(status_code=502, detail="Telegram unreachable") from exc
+    except httpx.RequestError:
+        logger.exception("Telegram request failed")
+        return False
 
     if response.status_code != 200:
         logger.error("Telegram API error: %s", response.text)
-        raise HTTPException(status_code=502, detail="Failed to send to Telegram")
+        return False
+
+    return True
 
 
 @app.post("/api/rsvp")
 async def submit_rsvp(data: RSVPSubmission):
-    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
-        raise HTTPException(status_code=500, detail="Telegram not configured")
+    try:
+        save_rsvp(data)
+    except OSError as exc:
+        logger.exception("Failed to save RSVP locally")
+        raise HTTPException(status_code=500, detail="Failed to save RSVP") from exc
 
-    message = format_message(data)
-    await send_telegram_message(message)
+    telegram_sent = False
+    if TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
+        message = format_message(data)
+        telegram_sent = await send_telegram_message(message)
+        if not telegram_sent:
+            logger.warning("RSVP saved locally, Telegram delivery failed for %s", data.name)
+    else:
+        logger.warning("Telegram not configured, RSVP saved locally only")
 
-    return {"ok": True}
+    return {"ok": True, "telegram": telegram_sent}
 
 
 app.mount("/", StaticFiles(directory=str(ROOT), html=True), name="static")
