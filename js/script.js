@@ -29,6 +29,10 @@ const translations = {
         option3: "Кечирим, келе албайм",
         countLabel: "Адамдардын саны:",
         submitBtn: "жөнөтүү",
+        formSuccess: "Рахмат, {name}!",
+        formError: "Ката кетти. Кайра аракет кылыңыз.",
+        formSelectOption: "Жоопту тандаңыз",
+        formSending: "Жөнөтүлүүдө...",
         finalGreeting: "УРМАТ МЕНЕН,",
         brideName: "Адинай",
         groomName: "Болотбек"
@@ -62,6 +66,10 @@ const translations = {
         option3: "К сожалению, не смогу присутствовать",
         countLabel: "Количество людей:",
         submitBtn: "отправить",
+        formSuccess: "Спасибо за регистрацию, {name}!",
+        formError: "Произошла ошибка. Попробуйте ещё раз.",
+        formSelectOption: "Выберите вариант ответа",
+        formSending: "Отправка...",
         finalGreeting: "С УВАЖЕНИЕМ,",
         brideName: "Адинай",
         groomName: "Болотбек"
@@ -72,8 +80,8 @@ const translations = {
 let currentLanguage = 'ky';
 let currentSection = 0;
 const sections = [
+    'event-photo',
     'envelope',
-    'monogram',
     'invitation-card',
     'invitation-text',
     'location-time',
@@ -84,8 +92,10 @@ const sections = [
 // Инициализация
 document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
+    setupFinalEnvelopeReveal();
     startCountdown();
     updateLanguage('ky');
+    playBackgroundMusic();
 });
 
 // Выбор языка
@@ -103,6 +113,9 @@ function setLanguage(lang) {
     
     // Показываем первую секцию
     showSection(0);
+
+    // Запуск музыки при выборе языка (fallback, если autoplay заблокирован)
+    playBackgroundMusic();
 }
 
 // Обновление языка
@@ -120,6 +133,14 @@ function updateLanguage(lang) {
     // Обновляем кнопки языков
     document.getElementById('kySwitch').classList.toggle('active', lang === 'ky');
     document.getElementById('ruSwitch').classList.toggle('active', lang === 'ru');
+
+    // Финальный конверт: разные изображения для языков
+    const finalEnvelopeImage = document.getElementById('finalEnvelopeImage');
+    if (finalEnvelopeImage) {
+        finalEnvelopeImage.src = lang === 'ky'
+            ? 'screens/image/mail_kg.png'
+            : 'screens/image/mail.png';
+    }
 }
 
 // Показывает конкретную секцию
@@ -141,6 +162,9 @@ function showSection(index) {
     const activeSection = document.getElementById(sectionName);
     if (activeSection) {
         activeSection.classList.add('active');
+        if (sectionName === 'final-envelope') {
+            activeSection.classList.add('in-view');
+        }
     }
     
     // Прокручиваем вверх
@@ -149,7 +173,24 @@ function showSection(index) {
 
 // Открытие конверта
 function openEnvelope() {
-    showSection(1);
+    showSection(2);
+}
+
+// Плавное появление финального конверта при прокрутке
+function setupFinalEnvelopeReveal() {
+    const section = document.getElementById('final-envelope');
+    if (!section) return;
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                section.classList.add('in-view');
+                observer.unobserve(section);
+            }
+        });
+    }, { threshold: 0.25 });
+
+    observer.observe(section);
 }
 
 // Настройка обработчиков событий
@@ -225,37 +266,14 @@ function openMap() {
     window.open('https://2gis.kg/bishkek/geo/15763234351161611', '_blank');
 }
 
-// Управление музыкой
-let musicPlaying = false;
+// Фоновая музыка
 const bgMusic = document.getElementById('bgMusic');
-const musicBtn = document.getElementById('musicBtn');
 
-function toggleMusic() {
+function playBackgroundMusic() {
     if (!bgMusic) return;
-    
-    if (musicPlaying) {
-        bgMusic.pause();
-        musicPlaying = false;
-    } else {
-        bgMusic.play().catch(err => {
-            console.log('Не удается воспроизвести музыку:', err);
-        });
-        musicPlaying = true;
-    }
-    
-    // Обновляем визуальное состояние кнопки
-    musicBtn.classList.toggle('playing', musicPlaying);
-}
 
-// Добавляем возможность включения музыки при первом взаимодействии
-document.addEventListener('click', function() {
-    if (!musicPlaying && bgMusic) {
-        bgMusic.play().catch(err => {
-            // Браузер блокирует autoplay, это нормально
-        });
-        musicPlaying = true;
-    }
-});
+    bgMusic.play().catch(function() {});
+}
 
 // Управление счетчиком гостей
 function increaseCount() {
@@ -273,26 +291,55 @@ function decreaseCount() {
 // Обработка формы
 const form = document.querySelector('.guest-form');
 if (form) {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        const guestName = document.getElementById('guestName').value;
-        const guestCount = document.getElementById('guestCount').value;
-        
+
+        const t = translations[currentLanguage];
+        const guestName = document.getElementById('guestName').value.trim();
+        const guestCount = parseInt(document.getElementById('guestCount').value, 10);
+        const attendanceInput = form.querySelector('input[name="attendance"]:checked');
+        const submitBtn = document.getElementById('submitBtn');
+
         if (!guestName) {
-            alert('Пожалуйста, введите ваше имя');
+            alert(t.nameLabel.replace(':', ''));
             return;
         }
-        
-        // Здесь позже будет интеграция с Telegram/FastAPI
-        console.log('Форма отправлена:', {
-            name: guestName,
-            count: guestCount
-        });
-        
-        alert(`Спасибо за регистрацию, ${guestName}!`);
-        
-        // Переходим на финальный экран
-        showSection(6);
+
+        if (!attendanceInput) {
+            alert(t.formSelectOption);
+            return;
+        }
+
+        const attendanceKey = attendanceInput.value;
+        const attendanceText = t[attendanceKey];
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = t.formSending;
+
+        try {
+            const response = await fetch('/api/rsvp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: guestName,
+                    attendance: attendanceText,
+                    guest_count: guestCount
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Request failed');
+            }
+
+            alert(t.formSuccess.replace('{name}', guestName));
+            form.reset();
+            document.getElementById('guestCount').value = '1';
+            showSection(6);
+        } catch (err) {
+            alert(t.formError);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = t.submitBtn;
+        }
     });
 }

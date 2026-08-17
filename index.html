@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кыз узатуу - Адинай</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Display:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <!-- Выбор языка -->
     <div id="languageScreen" class="language-screen active">
-        <h1 class="language-title">ТИЛДИ ТАНДАНЫЗ</h1>
+        <h1 class="language-title">ТИЛДИ ТАНДАҢЫЗ</h1>
         <p class="language-subtitle">ВЫБЕРИТЕ ЯЗЫК</p>
         
         <button class="lang-btn" onclick="setLanguage('ky')">КЫРГЫЗЧА</button>
@@ -19,74 +22,19 @@
     <!-- Основной контент -->
     <div id="mainContent" class="hidden">
         <div class="sections-container">
-            <!-- Конверт -->
-        <section id="envelope" class="envelope-section active">
-            <div class="envelope-container">
-                <h2 class="envelope-text-top" id="invitedTo">ВЫ ПРИГЛАШЕНЫ НА</h2>
-                <h3 class="envelope-text-middle" id="eventName">Кыз узатуу</h3>
-                <div class="envelope-icon">
-                    <svg class="envelope-seal" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="2"/>
-                        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="1"/>
-                        <text x="50" y="60" text-anchor="middle" font-size="40" font-family="serif">A</text>
-                    </svg>
-                </div>
-                <p class="envelope-hint" id="clickHint">(нажмите)</p>
-                <p class="envelope-text-bottom" id="invitationHint">В ВЕЧЕР, НАПОЛНЕННЫЙ СЧАСТЬЕМ — БУДЬТЕ РЯДОМ С НАМИ!</p>
-            </div>
+            <!-- Фото -->
+        <section id="event-photo" class="event-photo-section">
+            <img class="event-photo" src="screens/image/example.png" alt="Кыз узатуу">
         </section>
 
-        <!-- Главный экран с монограммой -->
-        <section id="monogram" class="monogram-section">
-            <div class="monogram-container">
-                <div class="monogram-frame">
-                    <svg class="monogram-border" viewBox="0 0 200 200">
-                        <path d="M100,20 Q150,20 180,50 Q200,70 200,100 Q200,130 180,150 Q150,180 100,180 Q50,180 20,150 Q0,130 0,100 Q0,70 20,50 Q50,20 100,20" 
-                              fill="none" stroke="currentColor" stroke-width="2"/>
-                        <!-- Декоративные элементы -->
-                        <circle cx="100" cy="100" r="70" fill="none" stroke="currentColor" stroke-width="1" opacity="0.5"/>
-                    </svg>
-                    <h1 class="monogram-letter">A</h1>
-                </div>
-            </div>
-            <div class="scroll-indicator">
-                <svg class="chevron-down" viewBox="0 0 24 24">
-                    <polyline points="6 9 12 15 18 9"></polyline>
-                </svg>
-            </div>
+            <!-- Конверт -->
+        <section id="envelope" class="envelope-section active">
+            <img class="envelope-image" src="screens/image/inv.jpeg" alt="Вы приглашены на Кыз узатуу">
         </section>
 
         <!-- Карточка приглашения -->
         <section id="invitation-card" class="invitation-card-section">
-            <div class="invitation-card">
-                <div class="card-flower">
-                    <svg class="flower-icon" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="8" fill="#c77da3"/>
-                        <circle cx="50" cy="30" r="6" fill="#e89bb5"/>
-                        <circle cx="65" cy="40" r="6" fill="#e89bb5"/>
-                        <circle cx="65" cy="60" r="6" fill="#e89bb5"/>
-                        <circle cx="50" cy="70" r="6" fill="#e89bb5"/>
-                        <circle cx="35" cy="60" r="6" fill="#e89bb5"/>
-                        <circle cx="35" cy="40" r="6" fill="#e89bb5"/>
-                    </svg>
-                </div>
-                <h2 class="card-title" id="brideNameCard">Адинай</h2>
-                <p class="card-subtitle" id="eventTypeCard">КЫЗ УЗАТУУ</p>
-                <p class="card-text" id="cardTextLine">РАЗДЕЛИТЕ С НАМИ ДЕНЬ, НАПОЛНЕННЫЙ СЧАСТЬЕМ!</p>
-                <div class="card-date">
-                    <div class="date-item">
-                        <span class="date-number" id="dateDay">13</span>
-                        <span class="date-dot">•</span>
-                    </div>
-                    <div class="date-item">
-                        <span class="date-number" id="dateMonth">09</span>
-                        <span class="date-dot">•</span>
-                    </div>
-                    <div class="date-item">
-                        <span class="date-number" id="dateYear">26</span>
-                    </div>
-                </div>
-            </div>
+            <img class="invitation-card-image" src="screens/image/Adobe Express - file.png" alt="Кыз узатуу - Адинай">
         </section>
 
         <!-- Текст приглашения -->
@@ -105,12 +53,13 @@
                     <span id="day7">Жк</span>
                 </div>
                 <div class="calendar-numbers">
-                    <span class="calendar-date">06</span>
-                    <span class="calendar-date highlight">07</span>
+                    <span class="calendar-date">07</span>
                     <span class="calendar-date">08</span>
                     <span class="calendar-date">09</span>
                     <span class="calendar-date">10</span>
                     <span class="calendar-date">11</span>
+                    <span class="calendar-date">12</span>
+                    <span class="calendar-date highlight">13</span>
                 </div>
             </div>
         </section>
@@ -175,15 +124,15 @@
                     <label id="attendanceLabel">Вы можете принти на торжество?</label>
                     <div class="checkbox-group">
                         <label class="checkbox-label">
-                            <input type="checkbox" class="checkbox-input">
+                            <input type="radio" name="attendance" class="checkbox-input" value="option1" required>
                             <span id="option1">Конечно, приду</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" class="checkbox-input">
+                            <input type="radio" name="attendance" class="checkbox-input" value="option2">
                             <span id="option2">Буду со своей супругой</span>
                         </label>
                         <label class="checkbox-label">
-                            <input type="checkbox" class="checkbox-input">
+                            <input type="radio" name="attendance" class="checkbox-input" value="option3">
                             <span id="option3">К сожалению, не смогу приступствовать</span>
                         </label>
                     </div>
@@ -204,16 +153,7 @@
 
         <!-- Финальный конверт -->
         <section id="final-envelope" class="final-envelope-section">
-            <div class="final-envelope">
-                <div class="envelope-back"></div>
-                <div class="envelope-front">
-                    <div class="envelope-content">
-                        <p class="envelope-greeting" id="finalGreeting">С УВАЖЕНИЕМ,</p>
-                        <p class="envelope-name bride-name" id="brideName">Адинай</p>
-                        <p class="envelope-name groom-name" id="groomName">Болотбек</p>
-                    </div>
-                </div>
-            </div>
+            <img class="final-envelope-image" id="finalEnvelopeImage" src="screens/image/mail_kg.png" alt="С уважением">
         </section>
 
         </div>
@@ -224,18 +164,10 @@
             <button class="lang-switch-btn" onclick="setLanguage('ru')" id="ruSwitch">РУ</button>
         </div>
 
-        <!-- Музыкальный плеер -->
-        <div class="music-player">
-            <button class="music-btn" id="musicBtn" onclick="toggleMusic()">
-                <svg class="music-icon" viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5h-2v-2h2l5-5v12z"/>
-                </svg>
-            </button>
-        </div>
     </div>
 
-    <audio id="bgMusic" loop>
-        <source src="assets/music/background.mp3" type="audio/mpeg">
+    <audio id="bgMusic" loop autoplay>
+        <source src="assets/music/song.mp3" type="audio/mpeg">
     </audio>
 
     <script src="js/script.js"></script>

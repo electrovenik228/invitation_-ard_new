@@ -22,6 +22,11 @@ yarn-error.log*
 # Локальные файлы конфигурации
 .env
 .env.local
+.venv/
+
+# Python
+__pycache__/
+*.pyc
 
 # Логи
 *.log
