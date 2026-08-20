@@ -7,7 +7,7 @@ from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -18,8 +18,15 @@ load_dotenv(ROOT / ".env")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 DATA_DIR = Path(os.getenv("RSVP_DATA_DIR", ROOT / "data"))
 RSVP_FILE = DATA_DIR / "rsvp.jsonl"
+
+NOT_ATTENDING_MARKERS = (
+    "келе албайм",
+    "не смогу",
+    "не смогу присутствовать",
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -50,6 +57,35 @@ def save_rsvp(data: RSVPSubmission) -> None:
     }
     with RSVP_FILE.open("a", encoding="utf-8") as file:
         file.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def load_rsvps() -> list[dict]:
+    if not RSVP_FILE.exists():
+        return []
+
+    records = []
+    for line in RSVP_FILE.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            records.append(json.loads(line))
+        except json.JSONDecodeError:
+            logger.warning("Skipping invalid RSVP record: %s", line)
+    records.sort(key=lambda item: item.get("timestamp", ""), reverse=True)
+    return records
+
+
+def is_attending(attendance: str) -> bool:
+    normalized = attendance.casefold()
+    return not any(marker in normalized for marker in NOT_ATTENDING_MARKERS)
+
+
+def verify_admin(x_admin_password: str | None = Header(default=None)) -> None:
+    if not ADMIN_PASSWORD:
+        raise HTTPException(status_code=503, detail="Admin access is not configured")
+    if x_admin_password != ADMIN_PASSWORD:
+        raise HTTPException(status_code=401, detail="Invalid password")
 
 
 def format_message(data: RSVPSubmission) -> str:
@@ -103,6 +139,22 @@ async def submit_rsvp(data: RSVPSubmission):
         logger.warning("Telegram not configured, RSVP saved locally only")
 
     return {"ok": True, "telegram": telegram_sent}
+
+
+@app.get("/api/guests")
+async def list_guests(_: None = Depends(verify_admin)):
+    records = load_rsvps()
+
+    attending = [record for record in records if is_attending(record.get("attendance", ""))]
+    not_attending = [record for record in records if not is_attending(record.get("attendance", ""))]
+
+    return {
+        "total": len(records),
+        "attending_count": len(attending),
+        "not_attending_count": len(not_attending),
+        "total_guests": sum(record.get("guest_count", 1) for record in attending),
+        "guests": records,
+    }
 
 
 app.mount("/", StaticFiles(directory=str(ROOT), html=True), name="static")

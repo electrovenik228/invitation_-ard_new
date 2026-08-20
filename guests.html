@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Гости — Кыз узатуу</title>
+    <link rel="stylesheet" href="css/guests.css">
+</head>
+<body>
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <h1>Список гостей</h1>
+            <p>Введите пароль для доступа</p>
+            <form id="loginForm" class="login-form">
+                <input type="password" id="passwordInput" placeholder="Пароль" autocomplete="current-password" required>
+                <button type="submit">Войти</button>
+            </form>
+            <p id="loginError" class="login-error hidden"></p>
+        </div>
+    </div>
+
+    <div id="guestsScreen" class="guests-screen hidden">
+        <header class="guests-header">
+            <div>
+                <h1>Список гостей</h1>
+                <p class="guests-subtitle">Анкеты RSVP</p>
+            </div>
+            <div class="header-actions">
+                <button type="button" id="refreshBtn" class="btn-secondary">Обновить</button>
+                <button type="button" id="logoutBtn" class="btn-secondary">Выйти</button>
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <span class="stat-label">Всего ответов</span>
+                <strong id="statTotal" class="stat-value">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Придут</span>
+                <strong id="statAttending" class="stat-value">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Не придут</span>
+                <strong id="statNotAttending" class="stat-value">0</strong>
+            </article>
+            <article class="stat-card">
+                <span class="stat-label">Всего человек</span>
+                <strong id="statGuests" class="stat-value">0</strong>
+            </article>
+        </section>
+
+        <section class="table-section">
+            <div id="loadingState" class="state-message hidden">Загрузка...</div>
+            <div id="emptyState" class="state-message hidden">Пока нет ответов от гостей.</div>
+            <div id="errorState" class="state-message error hidden"></div>
+
+            <div class="table-wrap">
+                <table id="guestsTable" class="guests-table hidden">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Имя</th>
+                            <th>Ответ</th>
+                            <th>Кол-во</th>
+                            <th>Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody id="guestsTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/guests.js"></script>
+</body>
+</html>
