@@ -7,7 +7,7 @@ from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, Header, HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -18,7 +18,6 @@ load_dotenv(ROOT / ".env")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 TELEGRAM_PROXY = os.getenv("TELEGRAM_PROXY")
-ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 DATA_DIR = Path(os.getenv("RSVP_DATA_DIR", ROOT / "data"))
 RSVP_FILE = DATA_DIR / "rsvp.jsonl"
 
@@ -81,13 +80,6 @@ def is_attending(attendance: str) -> bool:
     return not any(marker in normalized for marker in NOT_ATTENDING_MARKERS)
 
 
-def verify_admin(x_admin_password: str | None = Header(default=None)) -> None:
-    if not ADMIN_PASSWORD:
-        raise HTTPException(status_code=503, detail="Admin access is not configured")
-    if x_admin_password != ADMIN_PASSWORD:
-        raise HTTPException(status_code=401, detail="Invalid password")
-
-
 def format_message(data: RSVPSubmission) -> str:
     return (
         "<b>🎉 Жаңы конок / Новая анкета</b>\n\n"
@@ -142,7 +134,7 @@ async def submit_rsvp(data: RSVPSubmission):
 
 
 @app.get("/api/guests")
-async def list_guests(_: None = Depends(verify_admin)):
+async def list_guests():
     records = load_rsvps()
 
     attending = [record for record in records if is_attending(record.get("attendance", ""))]

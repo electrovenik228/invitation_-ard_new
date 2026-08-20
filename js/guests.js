@@ -1,12 +1,4 @@
-const STORAGE_KEY = 'guestsAdminPassword';
-
-const loginScreen = document.getElementById('loginScreen');
-const guestsScreen = document.getElementById('guestsScreen');
-const loginForm = document.getElementById('loginForm');
-const passwordInput = document.getElementById('passwordInput');
-const loginError = document.getElementById('loginError');
 const refreshBtn = document.getElementById('refreshBtn');
-const logoutBtn = document.getElementById('logoutBtn');
 const loadingState = document.getElementById('loadingState');
 const emptyState = document.getElementById('emptyState');
 const errorState = document.getElementById('errorState');
@@ -38,18 +30,6 @@ function formatDate(timestamp) {
     });
 }
 
-function showLogin() {
-    loginScreen.classList.remove('hidden');
-    guestsScreen.classList.add('hidden');
-    loginError.classList.add('hidden');
-    passwordInput.value = '';
-}
-
-function showGuests() {
-    loginScreen.classList.add('hidden');
-    guestsScreen.classList.remove('hidden');
-}
-
 function setLoading(isLoading) {
     loadingState.classList.toggle('hidden', !isLoading);
 }
@@ -59,16 +39,8 @@ function setError(message) {
     errorState.classList.toggle('hidden', !message);
 }
 
-async function fetchGuests(password) {
-    const response = await fetch('/api/guests', {
-        headers: {
-            'X-Admin-Password': password,
-        },
-    });
-
-    if (response.status === 401) {
-        throw new Error('Неверный пароль');
-    }
+async function fetchGuests() {
+    const response = await fetch('/api/guests');
 
     if (!response.ok) {
         throw new Error('Не удалось загрузить список гостей');
@@ -114,48 +86,19 @@ function renderGuests(data) {
     });
 }
 
-async function loadGuests(password) {
+async function loadGuests() {
     setLoading(true);
     setError('');
 
     try {
-        const data = await fetchGuests(password);
+        const data = await fetchGuests();
         renderGuests(data);
-        showGuests();
     } catch (error) {
-        sessionStorage.removeItem(STORAGE_KEY);
-        showLogin();
-        loginError.textContent = error.message;
-        loginError.classList.remove('hidden');
+        setError(error.message);
     } finally {
         setLoading(false);
     }
 }
 
-loginForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const password = passwordInput.value.trim();
-    if (!password) return;
-
-    sessionStorage.setItem(STORAGE_KEY, password);
-    await loadGuests(password);
-});
-
-refreshBtn.addEventListener('click', async () => {
-    const password = sessionStorage.getItem(STORAGE_KEY);
-    if (!password) {
-        showLogin();
-        return;
-    }
-    await loadGuests(password);
-});
-
-logoutBtn.addEventListener('click', () => {
-    sessionStorage.removeItem(STORAGE_KEY);
-    showLogin();
-});
-
-const savedPassword = sessionStorage.getItem(STORAGE_KEY);
-if (savedPassword) {
-    loadGuests(savedPassword);
-}
+refreshBtn.addEventListener('click', loadGuests);
+loadGuests();
