@@ -134,6 +134,14 @@ function updateLanguage(lang) {
     document.getElementById('kySwitch').classList.toggle('active', lang === 'ky');
     document.getElementById('ruSwitch').classList.toggle('active', lang === 'ru');
 
+    // Конверт приглашения: разные изображения для языков
+    const envelopeImage = document.getElementById('envelopeImage');
+    if (envelopeImage) {
+        envelopeImage.src = lang === 'ky'
+            ? 'screens/image/inv_kg.jpeg'
+            : 'screens/image/inv.jpeg';
+    }
+
     // Финальный конверт: разные изображения для языков
     const finalEnvelopeImage = document.getElementById('finalEnvelopeImage');
     if (finalEnvelopeImage) {
